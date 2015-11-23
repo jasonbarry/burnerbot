@@ -106,13 +106,13 @@ function composeTweet () {
 
 	$markov = new Markov();
 	$markov->init($titles);
-	$title = $markov->generate(2);
+	$title = $markov->generate(4);
 
 	$markov = new Markov();
 	$markov->init($camps);
-	$camp = $markov->generate(2);
+	$camp = $markov->generate(4);
 
-	$chain = "$title @ $camp (" . address() . ") #BurningMan #FakePlayaEvents";
+	$chain = "$title @ $camp (" . address() . ") #burningman #bot";
 
 	if (strlen($chain >= $TWITTER_CHARACTER_LIMIT)) {
 		// try again
@@ -123,6 +123,7 @@ function composeTweet () {
 	}
 }
 
+// echo composeTweet();
 
 $url = "https://api.twitter.com/1.1/statuses/update.json";
 $oauth = array( 'oauth_consumer_key' => $consumer_key,
