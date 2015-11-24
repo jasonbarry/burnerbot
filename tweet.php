@@ -1,6 +1,5 @@
 <?php
 
-require('events.php');
 require('oauth-helpers.php');
 require('oauth-keys.php');
 
@@ -100,7 +99,8 @@ function address () {
 // Assert that the generated string is tweetable. Twitter imposes a 140 character limit per tweet 
 // so this long string enforeces that the Markov'd string will fit inside the 140 character limit
 function composeTweet () {
-	global $titles, $camps;
+	$titles = file('data-titles.txt', FILE_IGNORE_NEW_LINES);
+	$camps = file('data-camps.txt', FILE_IGNORE_NEW_LINES);
 
 	$TWITTER_CHARACTER_LIMIT = 140;
 
@@ -123,35 +123,35 @@ function composeTweet () {
 	}
 }
 
-// echo composeTweet();
+echo composeTweet();
 
-$url = "https://api.twitter.com/1.1/statuses/update.json";
-$oauth = array( 'oauth_consumer_key' => $consumer_key,
-                'oauth_nonce' => time(),
-                'oauth_signature_method' => 'HMAC-SHA1',
-                'oauth_token' => $oauth_access_token,
-                'oauth_timestamp' => time(),
-                'oauth_version' => '1.0');
+// $url = "https://api.twitter.com/1.1/statuses/update.json";
+// $oauth = array( 'oauth_consumer_key' => $consumer_key,
+//                 'oauth_nonce' => time(),
+//                 'oauth_signature_method' => 'HMAC-SHA1',
+//                 'oauth_token' => $oauth_access_token,
+//                 'oauth_timestamp' => time(),
+//                 'oauth_version' => '1.0');
  
-$base_info = buildBaseString($url, 'POST', $oauth);
-// echo $base_info;
-$composite_key = rawurlencode($consumer_secret) . '&' . rawurlencode($oauth_access_token_secret);
-$oauth_signature = base64_encode(hash_hmac('sha1', $base_info, $composite_key, true));
-$oauth['oauth_signature'] = $oauth_signature;
+// $base_info = buildBaseString($url, 'POST', $oauth);
+// // echo $base_info;
+// $composite_key = rawurlencode($consumer_secret) . '&' . rawurlencode($oauth_access_token_secret);
+// $oauth_signature = base64_encode(hash_hmac('sha1', $base_info, $composite_key, true));
+// $oauth['oauth_signature'] = $oauth_signature;
  
-// make requests
-$header = array(buildAuthorizationHeader($oauth), 'Expect:');
-$options = array( CURLOPT_HTTPHEADER => $header,
-                  CURLOPT_POSTFIELDS => array('status' => composeTweet()), 
-                  CURLOPT_HEADER => false,
-                  CURLOPT_URL => $url,
-                  CURLOPT_RETURNTRANSFER => true,
-                  CURLOPT_SSL_VERIFYPEER => false);
+// // make requests
+// $header = array(buildAuthorizationHeader($oauth), 'Expect:');
+// $options = array( CURLOPT_HTTPHEADER => $header,
+//                   CURLOPT_POSTFIELDS => array('status' => composeTweet()), 
+//                   CURLOPT_HEADER => false,
+//                   CURLOPT_URL => $url,
+//                   CURLOPT_RETURNTRANSFER => true,
+//                   CURLOPT_SSL_VERIFYPEER => false);
  
-$feed = curl_init();
-curl_setopt_array($feed, $options);
-$json = curl_exec($feed);
-curl_close($feed);
+// $feed = curl_init();
+// curl_setopt_array($feed, $options);
+// $json = curl_exec($feed);
+// curl_close($feed);
 
 
 ?>
