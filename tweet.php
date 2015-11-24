@@ -114,7 +114,7 @@ function composeTweet () {
 
 	$chain = "$title @ $camp (" . address() . ") #burningman #bot";
 
-	if (strlen($chain >= $TWITTER_CHARACTER_LIMIT)) {
+	if (strlen($chain) >= $TWITTER_CHARACTER_LIMIT) {
 		// try again
 		composeTweet();
 	}
